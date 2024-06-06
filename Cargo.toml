@@ -30,6 +30,8 @@ members = [
     "examples/collatz/guest",
     "examples/fibonacci",
     "examples/fibonacci/guest",
+    "examples/matmul",
+    "examples/matmul/guest",
     "examples/sha2-ex",
     "examples/sha2-ex/guest",
     "examples/sha3-ex",
