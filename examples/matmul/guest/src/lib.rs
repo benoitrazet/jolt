@@ -2,6 +2,7 @@
 #![no_main]
 
 pub const N: usize = 19; // Size of the square matrices
+                         // A bug shows for N >= 19.
 
 use core::fmt;
 use serde::{
@@ -10,6 +11,7 @@ use serde::{
     Deserialize, Deserializer, Serialize,
 };
 
+#[derive(Clone)]
 pub struct MyArray([i32; N * N]);
 
 impl Default for MyArray {
@@ -42,7 +44,7 @@ impl<'de> Deserialize<'de> for MyArray {
             type Value = MyArray;
 
             fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
-                formatter.write_str("an array of 100 i32 elements")
+                formatter.write_str("an array")
             }
 
             fn visit_seq<A>(self, mut seq: A) -> Result<MyArray, A::Error>
@@ -90,14 +92,14 @@ pub fn check_matrix_equal(a: &MyArray, b: &MyArray) -> bool {
 }
 
 #[cfg(feature = "main_program")]
-pub fn matmul(i: MyArray) -> bool {
-    let t = matrix_multiply(&i, &i);
-    check_matrix_equal(&t, &i)
+pub fn matmul(a: MyArray, b: MyArray, c: MyArray) -> bool {
+    let t = matrix_multiply(&a, &b);
+    check_matrix_equal(&t, &c)
 }
 
 #[cfg(not(feature = "main_program"))]
 #[jolt::provable]
-fn matmul(i: MyArray) -> bool {
-    let t = matrix_multiply(&i, &i);
-    check_matrix_equal(&t, &i)
+pub fn matmul(a: MyArray, b: MyArray, c: MyArray) -> bool {
+    let t = matrix_multiply(&a, &b);
+    check_matrix_equal(&t, &c)
 }
